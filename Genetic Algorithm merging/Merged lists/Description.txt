@@ -1,1 +1,5 @@
-Here are the lists produced from the merging with genetic algorithms
+Here are the lists produced from the merging with genetic algorithms.
+
+The final_act_down.rds is the final ranked list for the drugs tested in myc-active downregulated cell-lines.
+The final_act_up.rds is the final ranked list for the drugs tested in myc-active upregulated cell-lines.
+The final_inact.rds is the final ranked list for the drugs tested in myc-inactive cell-lines.

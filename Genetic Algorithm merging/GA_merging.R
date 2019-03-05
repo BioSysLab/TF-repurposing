@@ -44,6 +44,8 @@ final_act_down <- final_act_down %>% mutate(rank=c(1:448))
 colnames(final_act_down) <- c("drugs","rank.act")
 saveRDS(final_act_down,"final_act_down.rds")
 
+#In inactives we reverse the ranks in the end
+
 GAW_inact <- RankAggreg(ordered_inactives, 435, weights_inactives, method= "GA",
                         distance="Spearman", seed=123, maxIter = 10000,
                         CP=.4, MP=.02, verbose=TRUE)

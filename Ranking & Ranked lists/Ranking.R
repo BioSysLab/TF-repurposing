@@ -7,6 +7,8 @@ library(readr)
 library(gplots)
 library(xlsx)
 
+#This code is used to produce the ranked lists used in borda and GA algorithms for ranked list merging.
+
 
 #Sanger and CTRP DATA with IC50's. A quick data cleaning,organising etc
 

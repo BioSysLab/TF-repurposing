@@ -7,31 +7,40 @@ library(readr)
 library(gplots)
 library(xlsx)
 
-#This code is used to produce the ranked lists used in borda and GA algorithms for ranked list merging.
-
 
 #Sanger and CTRP DATA with IC50's. A quick data cleaning,organising etc
-
 all_data_z <- all_data
 all_data_z <- all_data_z %>% filter(!is.na(IC50))
 all_data_z <- all_data_z %>% filter(!is.na(cpd_name))
 all_data_z <- all_data_z %>% filter(!is.na(ccl_name))
+
+#Only cell-lines with more than 10 different drugs tested on them remain on the data frame.
 summary <- all_data_z %>% group_by(ccl_name) %>% summarise(n_distinct(cpd_name))
 summary <- summary %>% filter(summary$`n_distinct(cpd_name)`>10)
 all_data_z <- left_join(summary,all_data_z,by="ccl_name")
 all_data_z <- all_data_z %>% filter(!is.na(`n_distinct(cpd_name)`))
 all_data_z <- unique(all_data_z)
+
+#Unique cell-lines in the data frame
 cells <- as.data.frame(unique(all_data_z$ccl_name))
 colnames(cells) <- "ccl_name"
+
+#Count how many time a drugs is tested in a cell-line and separate those used once from those used more than once.
 a <- all_data_z %>% group_by(ccl_name) %>% count(cpd_name)
 a2 <- a %>% filter(n<2)
 a3 <- a2 %>% unite("ccl/cpd",ccl_name,cpd_name,sep="/",remove=TRUE)
 a4 <- a %>% filter(n>1)
 a4 <- a4 %>% unite("ccl/cpd",ccl_name,cpd_name,sep="/",remove=TRUE)
+
+#For those drugs tested more than once (probably with different dose,time etc) get the median of the IC50's from the experiment of the same drug in one cell-line
 all_data_med <- all_data_z %>% filter(all_data_z$`ccl/cpd` %in% a4$`ccl/cpd`)
 all_data_med <- all_data_med %>% group_by(`ccl/cpd`) %>% mutate(IC50=median(IC50))
 all_data_med <- unique(all_data_med)
+
+#For some pairs of cell-line/drug we have experiment both from sanger and ctrp and we choose those from ctrp
 all_data_med <-all_data_med %>% group_by(`ccl/cpd`) %>% filter(dataset=='ctrp')
+
+#Separate drugs with more IC50's values as explained above and merge the dataframes again in on one final data frame.
 all_data_z <- as.data.frame(all_data_z %>% filter(all_data_z$`ccl/cpd` %in% a3$`ccl/cpd`))
 all_data_test <- rbind.data.frame(all_data_z,all_data_med)
 all_data_z <- all_data_test
@@ -83,7 +92,8 @@ all_data_ranked <-  all_data_ranked %>% filter(!is.na(activity))
 actives <- all_data_ranked %>% filter(activity==1)
 inactives <- filter(all_data_ranked,activity==0)
 
-#Get ranked lists (for example for upregulation)
+#Get ranked lists (for example for upregulation) with acceptable number of drugs tested on each cell-line
+#Number of lists=n(=10)=number of cellines
 
 ordered_active_up <- actives %>% group_by(ccl_name) %>% arrange(rank,.by_group=TRUE) %>% select(cpd_name,`n_distinct(cpd_name)`,IC50)
 weights_active_up <- ordered_active_up %>% filter(`n_distinct(cpd_name)`>=600)
@@ -91,6 +101,8 @@ ordered_active_up <- ordered_active_up %>% filter(`n_distinct(cpd_name)`>=600)
 weights_active_up <- ordered_active_up %>% filter(`n_distinct(cpd_name)`<=800) %>% select(ccl_name,cpd_name,IC50)
 ordered_active_up <- ordered_active_up %>% filter(`n_distinct(cpd_name)`<=800) %>% select(ccl_name,cpd_name)
 c1 <- unique(ordered_active_up$ccl_name)
+
+#Intersect the common drugs from the n(=10) different cell-lines
 inordered_active_up <- Reduce(intersect,list(ordered_active_up$cpd_name[which(ordered_active_up$ccl_name==c1[1])],
                               ordered_active_up$cpd_name[which(ordered_active_up$ccl_name==c1[2])],
                               ordered_active_up$cpd_name[which(ordered_active_up$ccl_name==c1[3])],
@@ -104,6 +116,7 @@ inordered_active_up <- Reduce(intersect,list(ordered_active_up$cpd_name[which(or
 ordered_active_up <- ordered_active_up[(which(ordered_active_up$cpd_name %in% inordered_active_up)),]
 weights_active_up <- weights_active_up[(which(weights_active_up$cpd_name %in% inordered_active_up)),]
 
+#Create matrix of weights and ranked lists with each row being a list
 ordered_active_up1 <- NULL
 ordered_active_up1 <- as.data.frame(rep(c(1:319), times = 10))
 colnames(ordered_active_up1) <- "no"
@@ -131,7 +144,7 @@ weights_active_up <- 1/weights_active_up
 saveRDS(ordered_active_up,"ordered_active_up.rds")
 saveRDS(weights_active_up,"weights_active_up.rds")
 
-#Inactive ranked list
+#Inactive ranked list. Same steps as used above in ranked active lists
 ordered_inactives <- inactives %>% group_by(ccl_name) %>% arrange(rank,.by_group=TRUE) %>% select(cpd_name,`n_distinct(cpd_name)`,IC50)
 weights_inactives <- ordered_inactives %>% filter(`n_distinct(cpd_name)`>=600)
 ordered_inactives <- ordered_inactives %>% filter(`n_distinct(cpd_name)`>=600) 
@@ -173,6 +186,6 @@ colnames(weights_inactives) <- NULL
 rownames(weights_inactives) <- rownames(ordered_inactives2)
 weights_inactives <- 1/weights_inactives
 
-saveRDS(ordered_inactive,"ordered_inactive.rds")
-saveRDS(weights_inactive,"weights_inactive.rds")
+saveRDS(ordered_inactives,"ordered_inactive.rds")
+saveRDS(weights_inactives,"weights_inactive.rds")
 

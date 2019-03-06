@@ -104,21 +104,21 @@ c1 <- unique(ordered_active_up$ccl_name)
 
 #Intersect the common drugs from the n(=10) different cell-lines
 inordered_active_up <- Reduce(intersect,list(ordered_active_up$cpd_name[which(ordered_active_up$ccl_name==c1[1])],
-                              ordered_active_up$cpd_name[which(ordered_active_up$ccl_name==c1[2])],
-                              ordered_active_up$cpd_name[which(ordered_active_up$ccl_name==c1[3])],
-                              ordered_active_up$cpd_name[which(ordered_active_up$ccl_name==c1[4])],
-                              ordered_active_up$cpd_name[which(ordered_active_up$ccl_name==c1[5])],
-                              ordered_active_up$cpd_name[which(ordered_active_up$ccl_name==c1[6])],
-                              ordered_active_up$cpd_name[which(ordered_active_up$ccl_name==c1[7])],
-                              ordered_active_up$cpd_name[which(ordered_active_up$ccl_name==c1[8])],
-                              ordered_active_up$cpd_name[which(ordered_active_up$ccl_name==c1[9])],
-                              ordered_active_up$cpd_name[which(ordered_active_up$ccl_name==c1[10])]))
+                                             ordered_active_up$cpd_name[which(ordered_active_up$ccl_name==c1[2])],
+                                             ordered_active_up$cpd_name[which(ordered_active_up$ccl_name==c1[3])],
+                                             ordered_active_up$cpd_name[which(ordered_active_up$ccl_name==c1[4])],
+                                             ordered_active_up$cpd_name[which(ordered_active_up$ccl_name==c1[5])],
+                                             ordered_active_up$cpd_name[which(ordered_active_up$ccl_name==c1[6])],
+                                             ordered_active_up$cpd_name[which(ordered_active_up$ccl_name==c1[7])],
+                                             ordered_active_up$cpd_name[which(ordered_active_up$ccl_name==c1[8])],
+                                             ordered_active_up$cpd_name[which(ordered_active_up$ccl_name==c1[9])],
+                                             ordered_active_up$cpd_name[which(ordered_active_up$ccl_name==c1[10])]))
 ordered_active_up <- ordered_active_up[(which(ordered_active_up$cpd_name %in% inordered_active_up)),]
 weights_active_up <- weights_active_up[(which(weights_active_up$cpd_name %in% inordered_active_up)),]
 
 #Create matrix of weights and ranked lists with each row being a list
 ordered_active_up1 <- NULL
-ordered_active_up1 <- as.data.frame(rep(c(1:NROW(ordered_active_up)), times = 10))
+ordered_active_up1 <- as.data.frame(rep(c(1:NROW(inordered_active_up)), times = 10))
 colnames(ordered_active_up1) <- "no"
 ordered_active_up$no <-NULL
 ordered_active_up$no <- ordered_active_up1$no
@@ -152,19 +152,19 @@ weights_inactives <- ordered_inactives %>% filter(`n_distinct(cpd_name)`<=800) %
 ordered_inactives <- ordered_inactives %>% filter(`n_distinct(cpd_name)`<=800) %>% select(ccl_name,cpd_name)
 c2 <- unique(ordered_inactives$ccl_name)
 inordered_inactives <- Reduce(intersect,list(ordered_inactives$cpd_name[which(ordered_inactives$ccl_name==c2[1])],
-                              ordered_inactives$cpd_name[which(ordered_inactives$ccl_name==c2[2])],
-                              ordered_inactives$cpd_name[which(ordered_inactives$ccl_name==c2[3])],
-                              ordered_inactives$cpd_name[which(ordered_inactives$ccl_name==c2[4])],
-                              ordered_inactives$cpd_name[which(ordered_inactives$ccl_name==c2[5])],
-                              ordered_inactives$cpd_name[which(ordered_inactives$ccl_name==c2[6])],
-                              ordered_inactives$cpd_name[which(ordered_inactives$ccl_name==c2[7])],
-                              ordered_inactives$cpd_name[which(ordered_inactives$ccl_name==c2[8])],
-                              ordered_inactives$cpd_name[which(ordered_inactives$ccl_name==c2[9])],
-                              ordered_inactives$cpd_name[which(ordered_inactives$ccl_name==c2[10])]))
+                                             ordered_inactives$cpd_name[which(ordered_inactives$ccl_name==c2[2])],
+                                             ordered_inactives$cpd_name[which(ordered_inactives$ccl_name==c2[3])],
+                                             ordered_inactives$cpd_name[which(ordered_inactives$ccl_name==c2[4])],
+                                             ordered_inactives$cpd_name[which(ordered_inactives$ccl_name==c2[5])],
+                                             ordered_inactives$cpd_name[which(ordered_inactives$ccl_name==c2[6])],
+                                             ordered_inactives$cpd_name[which(ordered_inactives$ccl_name==c2[7])],
+                                             ordered_inactives$cpd_name[which(ordered_inactives$ccl_name==c2[8])],
+                                             ordered_inactives$cpd_name[which(ordered_inactives$ccl_name==c2[9])],
+                                             ordered_inactives$cpd_name[which(ordered_inactives$ccl_name==c2[10])]))
 ordered_inactives <- ordered_inactives[(which(ordered_inactives$cpd_name %in% inordered_inactives)),]
 weights_inactives <- weights_inactives[(which(weights_inactives$cpd_name %in% inordered_inactives)),]
 ordered_inactives2 <- NULL
-ordered_inactives2 <- as.data.frame(rep(c(1:NROW(ordered_inactives)), times = 10))
+ordered_inactives2 <- as.data.frame(rep(c(1:NROW(inordered_inactives)), times = 10))
 colnames(ordered_inactives2) <- "no"
 ordered_inactives$no <-NULL
 ordered_inactives$no <- ordered_inactives2$no

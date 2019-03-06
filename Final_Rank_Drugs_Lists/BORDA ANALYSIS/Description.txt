@@ -1,2 +1,2 @@
 Here are the scored lists generated from downregulation and upregulation analysis using the borda algorithm to do the merging.
-Small score means "good" drug.
+Small score (percentage score) means "good" drug.

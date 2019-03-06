@@ -25,6 +25,7 @@ DrugScores_int_down <- DrugScores_int_down %>% mutate(score=rank.act+rank.inact)
 DrugScores_int_down$score <- DrugScores_int_down$score/max(DrugScores_int_down$score)*100
 DrugScores_int_down <- DrugScores_int_down[order(DrugScores_int_down$score),]
 saveRDS(DrugScores_int_down,"drugs_down_gaw.rds")
+write.csv(DrugScores_int_down,"drugs_down_gaw.csv")
 
 int_up <-  Reduce(intersect,list(final_inact$drugs,
                                  final_act_down$drugs))
@@ -35,4 +36,5 @@ DrugScores_int_up <- DrugScores_int_up %>% mutate(score=rank.act+rank.inact)
 DrugScores_int_up$score <- DrugScores_int_up$score/max(DrugScores_int_up$score)*100
 DrugScores_int_up <- DrugScores_int_up[order(DrugScores_int_up$score),]
 saveRDS(DrugScores_int_up,"drugs_up_gaw.rds")
+write.csv(DrugScores_int_up,"drugs_up_gaw.csv")
 

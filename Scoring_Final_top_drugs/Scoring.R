@@ -12,6 +12,8 @@ library(RankAggreg)
 
 #Load merged ranked lists. In this case we load the lists from the GA.
 
+#WARNING: For borda the final merged lists need reversing the ranks in inactives (in GA it is already done)
+
 final_act_up<- readRDS("final_act_up.rds")
 final_act_down<- readRDS("final_act_down.rds")
 final_inact<- readRDS("final_inact.rds")

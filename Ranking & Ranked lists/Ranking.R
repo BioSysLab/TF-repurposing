@@ -118,7 +118,7 @@ weights_active_up <- weights_active_up[(which(weights_active_up$cpd_name %in% in
 
 #Create matrix of weights and ranked lists with each row being a list
 ordered_active_up1 <- NULL
-ordered_active_up1 <- as.data.frame(rep(c(1:319), times = 10))
+ordered_active_up1 <- as.data.frame(rep(c(1:NROW(ordered_active_up)), times = 10))
 colnames(ordered_active_up1) <- "no"
 ordered_active_up$no <-NULL
 ordered_active_up$no <- ordered_active_up1$no
@@ -164,7 +164,7 @@ inordered_inactives <- Reduce(intersect,list(ordered_inactives$cpd_name[which(or
 ordered_inactives <- ordered_inactives[(which(ordered_inactives$cpd_name %in% inordered_inactives)),]
 weights_inactives <- weights_inactives[(which(weights_inactives$cpd_name %in% inordered_inactives)),]
 ordered_inactives2 <- NULL
-ordered_inactives2 <- as.data.frame(rep(c(1:322), times = 10))
+ordered_inactives2 <- as.data.frame(rep(c(1:NROW(ordered_inactives)), times = 10))
 colnames(ordered_inactives2) <- "no"
 ordered_inactives$no <-NULL
 ordered_inactives$no <- ordered_inactives2$no

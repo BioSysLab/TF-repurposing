@@ -1,4 +1,4 @@
-#### run borda for active up
+#### run borda for inactive
 
 library(GeneExpressionSignature)
 

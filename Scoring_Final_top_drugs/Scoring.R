@@ -24,7 +24,7 @@ DrugScores_int_down <-DrugScores_int_down %>% filter(!is.na(DrugScores_int_down$
 DrugScores_int_down <- DrugScores_int_down %>% mutate(score=rank.act+rank.inact)
 DrugScores_int_down$score <- DrugScores_int_down$score/max(DrugScores_int_down$score)*100
 DrugScores_int_down <- DrugScores_int_down[order(DrugScores_int_down$score),]
-saveRDS(DrugScores_int_down,"drugs_down_gaw_now.rds")
+saveRDS(DrugScores_int_down,"drugs_down_gaw.rds")
 
 int_up <-  Reduce(intersect,list(final_inact$drugs,
                                  final_act_down$drugs))
@@ -34,5 +34,5 @@ DrugScores_int_up <-DrugScores_int_up %>% filter(!is.na(DrugScores_int_up$rank.a
 DrugScores_int_up <- DrugScores_int_up %>% mutate(score=rank.act+rank.inact)
 DrugScores_int_up$score <- DrugScores_int_up$score/max(DrugScores_int_up$score)*100
 DrugScores_int_up <- DrugScores_int_up[order(DrugScores_int_up$score),]
-saveRDS(DrugScores_int_up,"drugs_up_gaw_now.rds")
+saveRDS(DrugScores_int_up,"drugs_up_gaw.rds")
 

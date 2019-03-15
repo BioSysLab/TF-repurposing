@@ -95,8 +95,8 @@ inactives <- filter(all_data_ranked,activity==0)
 
 
 ordered_active_up <- actives %>% group_by(ccl_name) %>% arrange(rank,.by_group=TRUE) %>% select(cpd_name,`n_distinct(cpd_name)`,IC50)
-weights_active_up <- ordered_active_up %>% filter(`n_distinct(cpd_name)`>=600)
-ordered_active_up <- ordered_active_up %>% filter(`n_distinct(cpd_name)`>=600) 
+weights_active_up <- ordered_active_up %>% filter(`n_distinct(cpd_name)`>=630)
+ordered_active_up <- ordered_active_up %>% filter(`n_distinct(cpd_name)`>=630) 
 weights_active_up <- ordered_active_up  %>% select(ccl_name,cpd_name,IC50)
 ordered_active_up <- ordered_active_up  %>% select(ccl_name,cpd_name)
 c1 <- unique(ordered_active_up$ccl_name)
@@ -141,8 +141,8 @@ saveRDS(weights_active_up,"weights_myc_up.rds")
 
 #Myc Down ranked list. Same steps as used above in ranked active lists
 ordered_inactives <- inactives %>% group_by(ccl_name) %>% arrange(rank,.by_group=TRUE) %>% select(cpd_name,`n_distinct(cpd_name)`,IC50)
-weights_inactives <- ordered_inactives %>% filter(`n_distinct(cpd_name)`>=600)
-ordered_inactives <- ordered_inactives %>% filter(`n_distinct(cpd_name)`>=600) 
+weights_inactives <- ordered_inactives %>% filter(`n_distinct(cpd_name)`>=615)
+ordered_inactives <- ordered_inactives %>% filter(`n_distinct(cpd_name)`>=615) 
 weights_inactives <- ordered_inactives  %>% select(ccl_name,cpd_name,IC50)
 ordered_inactives <- ordered_inactives  %>% select(ccl_name,cpd_name)
 c2 <- unique(ordered_inactives$ccl_name)

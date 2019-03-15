@@ -4,7 +4,7 @@ library(GeneExpressionSignature)
 
 ### read matrix of cell_lines x drugs with drug names inside
 
-t11 <- readRDS("C:/Users/user/Documents/guest/lists to merge/ordered_inactive_downanalysis.rds")
+t11 <- readRDS("ordered_inactive.rds")
 
 ### create an embedding vector from drug names to integers
 
@@ -45,4 +45,4 @@ merged <- RankMerging(exprset, MergingDistance = "Spearman", weighted = TRUE)
 merged_result <- exprs(merged)
 ### write results
 
-write.csv(merged_result,"C:/Users/user/Documents/guest/borda_merged/inactive.csv")
+write.csv(merged_result,"down.csv")

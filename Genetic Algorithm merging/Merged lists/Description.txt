@@ -1,7 +1,7 @@
 Here are the lists produced from the merging with genetic algorithms.
 
-The final_act_down.rds is the final ranked list for the drugs tested in myc-active downregulated cell-lines.
-The final_act_up.rds is the final ranked list for the drugs tested in myc-active upregulated cell-lines.
-The final_inact.rds is the final ranked list for the drugs tested in myc-inactive cell-lines.
+The final_down.rds is the final ranked list for the drugs tested in myc-downregulated cell-lines.
+The final_up.rds is the final ranked list for the drugs tested in myc-upregulated cell-lines.
 
-Warning: The list with the inactives the ranks are reversed. Meaning small rank means big IC50 value!!!!
+
+Warning: The list with the downregulated the ranks are reversed. Meaning small rank means big IC50 value!!!!

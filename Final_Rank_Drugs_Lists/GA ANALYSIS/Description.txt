@@ -1,2 +1,2 @@
-Here are the scored (percentage score->smaller score->better drug) lists generated using genetic algorithms to do the merging.
-There are two lists: one for upregulation analysis and one for downregulation analysis
+Here is the scored (percentage score->smaller score->better drug) list generated using genetic algorithms to do the merging.
+

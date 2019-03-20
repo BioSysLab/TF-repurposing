@@ -20,6 +20,8 @@ rownames(cmap_PA) <- landmark$`Entrez ID`
 rownames(cmap_PA) <- as.character(rownames(cmap_PA))
 cmap_myc_ranks_landmark<- readRDS("cmap_myc_ranks_landmark.rds")
 cmap_myc_ranks_landmark <- cmap_myc_ranks_landmark %>% filter(myc_ranks<=18)
+msigdb <- NULL
+gsetdb.human <- NULL
 
 ##VECTORIZED APPROACH (AGNOISE TO APLA YPARXEI GIA KANA TEST) -------------------------------------------------------------------------
 

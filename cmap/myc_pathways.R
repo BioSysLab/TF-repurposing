@@ -1,16 +1,11 @@
 library(fgsea)
 library(gage)
 library(EGSEAdata)
-#library(KEGGREST)
 library(AnnotationDbi)
 library(org.Hs.eg.db)
 library(tidyverse)
-#library(cmapR)
-#library(rhdf5)
-#library(CARNIVAL)
-#library(viper)
 library(dplyr)
-#data(kegg.gs)
+
 
 #Load inputs----------------------------------------------------------------------------------
 cmap_PA<- readRDS("cmap_PA.rds")

@@ -23,18 +23,6 @@ cmap_myc_ranks_landmark <- cmap_myc_ranks_landmark %>% filter(myc_ranks<=18)
 msigdb <- NULL
 gsetdb.human <- NULL
 
-##VECTORIZED APPROACH (AGNOISE TO APLA YPARXEI GIA KANA TEST) -------------------------------------------------------------------------
-
-#Gene set enrichment analysis
-paths <- apply(cmap_PA[,1:2], MARGIN=2, fgsea, pathways= kegg.pathways$human$kg.sets, nperm=1000, minSize = 10, maxSize = 500)
-fgseaRes <- fgsea(pathways = kegg.pathways$human$kg.sets, 
-                  stats = cmap_PA[,1],
-                  minSize=10,
-                  maxSize=500,
-                  nperm=1000)
-
-
-
 ##LOOP APPROACH-------------------------------------------------------------------------------
 cmap_myc_ranks_landmark$pvalue.cellcycle <- 666
 cmap_myc_ranks_landmark$pvalue.apopt <- 666
@@ -56,5 +44,6 @@ for (i in 1:NCOL(cmap_PA)) {
   cmap_myc_ranks_landmark$rankES.apopt[which(cmap_myc_ranks_landmark$sig_id==colnames(cmap_PA)[i])]<-  paths %>% filter(pathway=="hsa04210 Apoptosis") %>% select(ES.rank)
   cmap_myc_ranks_landmark$rankES.cellcycle[which(cmap_myc_ranks_landmark$sig_id==colnames(cmap_PA)[i])]<-  paths %>% filter(pathway=="hsa04110 Cell cycle") %>% select(ES.rank)
   paths <- NULL
+  print(paste("Iteration finished:",i))
   }
 

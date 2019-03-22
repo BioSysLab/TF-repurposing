@@ -40,20 +40,20 @@ for (i in 1:NCOL(cmap_PA)) {
   paths <- paths %>% mutate(ES.rank=rank(ES)) %>% select(pathway,pval,padj,ES.rank)
   cmap_myc_ranks_landmark$pvalue.cellcycle[which(cmap_myc_ranks_landmark$sig_id==colnames(cmap_PA)[i])]<-  paths %>% filter(pathway=="hsa04110 Cell cycle") %>% select(pval)
   cmap_myc_ranks_landmark$pvalue.apopt[which(cmap_myc_ranks_landmark$sig_id==colnames(cmap_PA)[i])]<-  paths %>% filter(pathway=="hsa04210 Apoptosis") %>% select(pval)
-  cmap_myc_ranks_landmark$pvalue.dnarep[which(cmap_myc_ranks_landmark$sig_id==colnames(cmap_PA)[i])]<-  paths %>% filter(pathway=="hsa04210 Apoptosis") %>% select(pval)
-  cmap_myc_ranks_landmark$pvalue.natkiller[which(cmap_myc_ranks_landmark$sig_id==colnames(cmap_PA)[i])]<-  paths %>% filter(pathway=="hsa04210 Apoptosis") %>% select(pval)
+  cmap_myc_ranks_landmark$pvalue.dnarep[which(cmap_myc_ranks_landmark$sig_id==colnames(cmap_PA)[i])]<-  paths %>% filter(pathway=="hsa03030 DNA replication") %>% select(pval)
+  cmap_myc_ranks_landmark$pvalue.natkiller[which(cmap_myc_ranks_landmark$sig_id==colnames(cmap_PA)[i])]<-  paths %>% filter(pathway=="hsa04650 Natural killer cell mediated cytotoxicity") %>% select(pval)
 
   
   cmap_myc_ranks_landmark$padj.apopt[which(cmap_myc_ranks_landmark$sig_id==colnames(cmap_PA)[i])]<-  paths %>% filter(pathway=="hsa04210 Apoptosis") %>% select(padj)
   cmap_myc_ranks_landmark$padj.cellcycle[which(cmap_myc_ranks_landmark$sig_id==colnames(cmap_PA)[i])]<-  paths %>% filter(pathway=="hsa04110 Cell cycle") %>% select(padj)
-  cmap_myc_ranks_landmark$padj.dnarep[which(cmap_myc_ranks_landmark$sig_id==colnames(cmap_PA)[i])]<-  paths %>% filter(pathway=="hsa04210 Apoptosis") %>% select(padj)
+  cmap_myc_ranks_landmark$padj.dnarep[which(cmap_myc_ranks_landmark$sig_id==colnames(cmap_PA)[i])]<-  paths %>% filter(pathway=="hsa03030 DNA replication") %>% select(padj)
   cmap_myc_ranks_landmark$padj.natkiller[which(cmap_myc_ranks_landmark$sig_id==colnames(cmap_PA)[i])]<-  paths %>% filter(pathway=="hsa04210 Apoptosis") %>% select(padj)
 
   
   cmap_myc_ranks_landmark$rankES.apopt[which(cmap_myc_ranks_landmark$sig_id==colnames(cmap_PA)[i])]<-  paths %>% filter(pathway=="hsa04210 Apoptosis") %>% select(ES.rank)
   cmap_myc_ranks_landmark$rankES.cellcycle[which(cmap_myc_ranks_landmark$sig_id==colnames(cmap_PA)[i])]<-  paths %>% filter(pathway=="hsa04110 Cell cycle") %>% select(ES.rank)
-  cmap_myc_ranks_landmark$rankES.dnarep[which(cmap_myc_ranks_landmark$sig_id==colnames(cmap_PA)[i])]<-  paths %>% filter(pathway=="hsa04210 Apoptosis") %>% select(ES.rank)
-  cmap_myc_ranks_landmark$padj.natkiller[which(cmap_myc_ranks_landmark$sig_id==colnames(cmap_PA)[i])]<-  paths %>% filter(pathway=="hsa04210 Apoptosis") %>% select(padj)
+  cmap_myc_ranks_landmark$rankES.dnarep[which(cmap_myc_ranks_landmark$sig_id==colnames(cmap_PA)[i])]<-  paths %>% filter(pathway=="hsa03030 DNA replication") %>% select(ES.rank)
+  cmap_myc_ranks_landmark$padj.natkiller[which(cmap_myc_ranks_landmark$sig_id==colnames(cmap_PA)[i])]<-  paths %>% filter(pathway=="hsa04650 Natural killer cell mediated cytotoxicity") %>% select(padj)
 
   
   paths <- NULL

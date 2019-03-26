@@ -9,6 +9,7 @@ library(xlsx)
 
 
 #Sanger and CTRP DATA with IC50's. A quick data cleaning,organising etc
+all_data <- readRDS("all_data.rds")
 all_data_z <- all_data
 all_data_z <- all_data_z %>% filter(!is.na(IC50))
 all_data_z <- all_data_z %>% filter(!is.na(cpd_name))
@@ -90,30 +91,51 @@ all_data_ranked <-  all_data_ranked %>% filter(!is.na(IC50))
 all_data_ranked <-  all_data_ranked %>% filter(!is.na(activity))
 actives <- all_data_ranked %>% filter(activity==1)
 inactives <- filter(all_data_ranked,activity==0)
+drugs_up <- as.data.frame(unique(actives$cpd_name))
+colnames(drugs_up) <- "cpd_name"
+drugs_down <- as.data.frame(unique(inactives$cpd_name))
+colnames(drugs_down) <- "cpd_name"
+drugs <- Reduce(intersect,list(drugs_down,drugs_up))
 
-#Get ranked lists (for example for upregulation) with acceptable number of drugs tested on each cell-line
+#Get ranked lists by also adding in every cell line the drugs that are missing
 
 
-ordered_active_up <- actives %>% group_by(ccl_name) %>% arrange(rank,.by_group=TRUE) %>% select(cpd_name,`n_distinct(cpd_name)`,IC50)
-weights_active_up <- ordered_active_up %>% filter(`n_distinct(cpd_name)`>=630)
-ordered_active_up <- ordered_active_up %>% filter(`n_distinct(cpd_name)`>=630) 
-weights_active_up <- ordered_active_up  %>% select(ccl_name,cpd_name,IC50)
-ordered_active_up <- ordered_active_up  %>% select(ccl_name,cpd_name)
+ordered_active_up <- actives %>% group_by(ccl_name) %>% arrange(rank,.by_group=TRUE) %>% select(cpd_name,`n_distinct(cpd_name)`,IC50,rank)
+weights_active_up <- ordered_active_up %>% filter(`n_distinct(cpd_name)`>=600)
+ordered_active_up <- ordered_active_up %>% filter(`n_distinct(cpd_name)`>=600)
+ordered_active_up <- ordered_active_up %>% group_by(ccl_name) %>% mutate(medrank=median(rank),medIC50=median(IC50)) 
+weights_active_up <- weights_active_up %>% group_by(ccl_name) %>% mutate(medrank=median(rank),medIC50=median(IC50)) 
+weights_active_up <- ordered_active_up  %>% select(ccl_name,cpd_name,IC50,rank,medrank,medIC50)
+ordered_active_up <- ordered_active_up  %>% select(ccl_name,cpd_name,IC50,rank,medrank,medIC50)
 c1 <- unique(ordered_active_up$ccl_name)
 
-
-#Intersect the common drugs from the different cell-lines
-big_list <- list()
+#Add in every cell line the drugs that are missing by assuming they are in middle of the ranks
+addition <- NULL
 for (i in 1:length(c1)){
-  big_list[[i]] <-  ordered_active_up$cpd_name[which(ordered_active_up$ccl_name==c1[i])]
+  tmp <- ordered_active_up %>% filter(ccl_name==c1[i])
+  tmp <- left_join(drugs,tmp,by='cpd_name')
+  tmp <- tmp %>% filter(is.na(IC50))
+  tmp$ccl_name <- c1[i]
+  tmp$`n_distinct(cpd_name)` <- NULL
+  tmp$IC50 <- median(ordered_active_up$medIC50[which(ordered_active_up$ccl_name==c1[i])])
+  tmp$rank <- median(ordered_active_up$medrank[which(ordered_active_up$ccl_name==c1[i])])
+  tmp$medIC50 <- median(ordered_active_up$medIC50[which(ordered_active_up$ccl_name==c1[i])])
+  tmp$medrank <- median(ordered_active_up$medrank[which(ordered_active_up$ccl_name==c1[i])])
+  tmp <- tmp[c('ccl_name','cpd_name','IC50','rank','medrank','medIC50')]
+  addition <- as.data.frame(rbind(addition,tmp))
 }
-inordered_active_up <- Reduce(intersect,big_list)
-ordered_active_up <- ordered_active_up[(which(ordered_active_up$cpd_name %in% inordered_active_up)),]
-weights_active_up <- weights_active_up[(which(weights_active_up$cpd_name %in% inordered_active_up)),]
+ordered_active_up <- ordered_active_up %>% ungroup()
+weights_active_up <-weights_active_up %>% ungroup()
+ordered_active_up <- as.data.frame(rbind(ordered_active_up,addition))
+weights_active_up <- as.data.frame(rbind(weights_active_up,addition))
+ordered_active_up <- ordered_active_up %>% group_by(ccl_name) %>% arrange(rank,.by_group=TRUE) %>% select(ccl_name,cpd_name)
+weights_active_up <- weights_active_up %>% group_by(ccl_name) %>% arrange(rank,.by_group=TRUE) %>% select(ccl_name,cpd_name,IC50)
+addition <- NULL
+tmp <- NULL
 
 #Create matrix of weights and ranked lists with each row being a list
 ordered_active_up1 <- NULL
-ordered_active_up1 <- as.data.frame(rep(c(1:NROW(inordered_active_up)), times = length(c1)))
+ordered_active_up1 <- as.data.frame(rep(c(1:NROW(drugs)), times = length(c1)))
 colnames(ordered_active_up1) <- "no"
 ordered_active_up$no <-NULL
 ordered_active_up$no <- ordered_active_up1$no
@@ -140,22 +162,42 @@ saveRDS(ordered_active_up,"ordered_myc_up.rds")
 saveRDS(weights_active_up,"weights_myc_up.rds")
 
 #Myc Down ranked list. Same steps as used above in ranked active lists
-ordered_inactives <- inactives %>% group_by(ccl_name) %>% arrange(rank,.by_group=TRUE) %>% select(cpd_name,`n_distinct(cpd_name)`,IC50)
-weights_inactives <- ordered_inactives %>% filter(`n_distinct(cpd_name)`>=615)
-ordered_inactives <- ordered_inactives %>% filter(`n_distinct(cpd_name)`>=615) 
-weights_inactives <- ordered_inactives  %>% select(ccl_name,cpd_name,IC50)
-ordered_inactives <- ordered_inactives  %>% select(ccl_name,cpd_name)
+ordered_inactives <- inactives %>% group_by(ccl_name) %>% arrange(rank,.by_group=TRUE) %>% select(cpd_name,`n_distinct(cpd_name)`,IC50,rank)
+weights_inactives <- ordered_inactives %>% filter(`n_distinct(cpd_name)`>=600)
+ordered_inactives <- ordered_inactives %>% filter(`n_distinct(cpd_name)`>=600) 
+ordered_inactives <- ordered_inactives %>% group_by(ccl_name) %>% mutate(medrank=median(rank),medIC50=median(IC50)) 
+weights_inactives <- weights_inactives %>% group_by(ccl_name) %>% mutate(medrank=median(rank),medIC50=median(IC50)) 
+weights_inactives <- ordered_inactives  %>% select(ccl_name,cpd_name,IC50,rank,medrank,medIC50)
+ordered_inactives <- ordered_inactives  %>% select(ccl_name,cpd_name,IC50,rank,medrank,medIC50)
 c2 <- unique(ordered_inactives$ccl_name)
 
-big_list <- list()
+#Add in every cell line the drugs that are missing by assuming they are in middle of the ranks
+addition <- NULL
 for (i in 1:length(c2)){
-  big_list[[i]] <-  ordered_inactives$cpd_name[which(ordered_inactives$ccl_name==c2[i])]
+  tmp <- ordered_inactives %>% filter(ccl_name==c2[i])
+  tmp <- left_join(drugs,tmp,by='cpd_name')
+  tmp <- tmp %>% filter(is.na(IC50))
+  tmp$ccl_name <- c2[i]
+  tmp$`n_distinct(cpd_name)` <- NULL
+  tmp$IC50 <- median(ordered_inactives$medIC50[which(ordered_inactives$ccl_name==c2[i])])
+  tmp$rank <- median(ordered_inactives$medrank[which(ordered_inactives$ccl_name==c2[i])])
+  tmp$medIC50 <- median(ordered_inactives$medIC50[which(ordered_inactives$ccl_name==c2[i])])
+  tmp$medrank <- median(ordered_inactives$medrank[which(ordered_inactives$ccl_name==c2[i])])
+  tmp <- tmp[c('ccl_name','cpd_name','IC50','rank','medrank','medIC50')]
+  addition <- as.data.frame(rbind(addition,tmp))
 }
-inordered_inactives <- Reduce(intersect,big_list)
-ordered_inactives <- ordered_inactives[(which(ordered_inactives$cpd_name %in% inordered_inactives)),]
-weights_inactives <- weights_inactives[(which(weights_inactives$cpd_name %in% inordered_inactives)),]
+ordered_inactives <- ordered_inactives %>% ungroup()
+weights_inactives <-weights_inactives %>% ungroup()
+ordered_inactives <- as.data.frame(rbind(ordered_inactives,addition))
+weights_inactives <- as.data.frame(rbind(weights_inactives,addition))
+ordered_inactives <- ordered_inactives %>% group_by(ccl_name) %>% arrange(rank,.by_group=TRUE) %>% select(ccl_name,cpd_name)
+weights_inactives <- weights_inactives %>% group_by(ccl_name) %>% arrange(rank,.by_group=TRUE) %>% select(ccl_name,cpd_name,IC50)
+addition <- NULL
+tmp <- NULL
+
+
 ordered_inactives2 <- NULL
-ordered_inactives2 <- as.data.frame(rep(c(1:NROW(inordered_inactives)), times = length(c2)))
+ordered_inactives2 <- as.data.frame(rep(c(1:NROW(drugs)), times = length(c2)))
 colnames(ordered_inactives2) <- "no"
 ordered_inactives$no <-NULL
 ordered_inactives$no <- ordered_inactives2$no

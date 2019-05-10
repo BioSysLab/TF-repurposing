@@ -1,0 +1,2 @@
+Here is the scored list generated using the borda algorithm to do the merging.
+Small score (percentage score) means "good" drug.

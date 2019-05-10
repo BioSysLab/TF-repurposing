@@ -1,0 +1,7 @@
+Here are the lists to be merged.
+
+In ordered_myc_up.rds are the ranked lists of drugs tested in various myc-upupregulated cell-lines, while in weights_myc_up.rds 
+are the associated scores.
+In ordered_inactive.rds are the ranked lists of drugs tested in various myc-downregulated cell-lines, while in weights_inactive.rds 
+are the associated scores.
+

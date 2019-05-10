@@ -1,2 +1,0 @@
-Here is the scored (percentage score->smaller score->better drug) list generated using genetic algorithms to do the merging.
-
